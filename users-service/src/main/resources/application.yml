@@ -1,0 +1,18 @@
+server:
+    port: 8081
+spring:
+    application:
+        name: ibiradoptaUserService
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: http://localhost:8080/realms/ibiradopta
+
+elaparato:
+    keycloak:
+        serverUrl: http://localhost:8080
+        realm: ibiradopta
+        clientId: ibiradopta-users-client
+        clientSecret: jk2pFkdZGFGZZzasQsjV15jYYCqkMEmQ
+

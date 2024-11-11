@@ -26,11 +26,13 @@ public class UserController {
     }
 
     @GetMapping("/username/{userName}")
+    @PreAuthorize("@userService.isAuthorized(authentication, #userName) or hasRole('ROLE_Administrador')")
     public ResponseEntity<List<User>> findByUserName(@PathVariable String userName) {
         return ResponseEntity.ok(service.findByUserName(userName));
     }
 
     @GetMapping("/id/{id}")
+    @PreAuthorize("#id == authentication.name or hasRole('ROLE_Administrador')")
     public ResponseEntity<User> findById(@PathVariable String id) {
         return ResponseEntity.ok(service.findById(id).get());
     }

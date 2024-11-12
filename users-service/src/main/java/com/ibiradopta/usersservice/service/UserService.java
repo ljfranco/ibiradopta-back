@@ -30,6 +30,10 @@ public class UserService {
         return repository.findById(id);
     }
 
+    public User updateUser(User user) {
+        return repository.updateUser(user);
+    }
+
     public boolean isAuthorized(Authentication authentication, String userName) {
         String currentUserName = getCurrentUserName(authentication);
         return currentUserName.equals(userName);

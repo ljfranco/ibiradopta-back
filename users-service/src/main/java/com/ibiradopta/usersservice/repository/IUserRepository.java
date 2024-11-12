@@ -10,4 +10,5 @@ public interface IUserRepository {
     List<User> findByUserName(String userName);
     Optional<User> findById(String id);
     User deleteUserById(String id);
+    User updateUser(User user);
 }

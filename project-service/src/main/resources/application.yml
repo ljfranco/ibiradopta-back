@@ -1,13 +1,13 @@
 server:
-  port: 8082
+  port: ${PROJECTS_SERVICE_PORT}
 spring:
   application:
     name: ibiradoptaProjectService
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/ibiradopta
-    username: root
-    password: password
+    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
   jpa:
     hibernate:
       dialect: org.hibernate.dialect.MySQL5Dialect
@@ -16,4 +16,4 @@ spring:
     oauth2:
       resource-server:
         jwt:
-          issuer-uri: http://localhost:8080/realms/ibiradopta
+          issuer-uri: ${OAUTH2_ISSUER_URI}

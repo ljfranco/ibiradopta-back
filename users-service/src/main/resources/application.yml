@@ -1,5 +1,5 @@
 server:
-    port: 8081
+    port: ${USERS_SERVICE_PORT}
 spring:
     application:
         name: ibiradoptaUserService
@@ -7,12 +7,12 @@ spring:
         oauth2:
             resourceserver:
                 jwt:
-                    issuer-uri: http://localhost:8080/realms/ibiradopta
+                    issuer-uri: ${OAUTH2_ISSUER_URI}
 
 ibiradopta:
     keycloak:
-        serverUrl: http://localhost:8080
-        realm: ibiradopta
-        clientId: ibiradopta-users-client
-        clientSecret: jNrnoiTWAtI7f6C72DQF90YiXmj6hIrS
+        serverUrl: ${KEYCLOAK_SERVER_URL}
+        realm: ${KEYCLOAK_REALM}
+        clientId: ${KEYCLOAK_CLIENT_ID}
+        clientSecret: ${KEYCLOAK_CLIENT_SECRET}
 

@@ -9,13 +9,13 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class KeycloakClientConfiguration {
-    @Value("${elaparato.keycloak.serverUrl}")
+    @Value("${ibiradopta.keycloak.serverUrl}")
     private String serverUrl;
-    @Value("${elaparato.keycloak.realm}")
+    @Value("${ibiradopta.keycloak.realm}")
     private String realm;
-    @Value("${elaparato.keycloak.clientId}")
+    @Value("${ibiradopta.keycloak.clientId}")
     private String clientId;
-    @Value("${elaparato.keycloak.clientSecret}")
+    @Value("${ibiradopta.keycloak.clientSecret}")
     private String clientSecret;
 
     @Bean

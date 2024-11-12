@@ -9,10 +9,10 @@ spring:
                 jwt:
                     issuer-uri: http://localhost:8080/realms/ibiradopta
 
-elaparato:
+ibiradopta:
     keycloak:
         serverUrl: http://localhost:8080
         realm: ibiradopta
         clientId: ibiradopta-users-client
-        clientSecret: YkgAwm1YwHU3IpWGAci3Wd4XYVpSBOP3
+        clientSecret: jNrnoiTWAtI7f6C72DQF90YiXmj6hIrS
 

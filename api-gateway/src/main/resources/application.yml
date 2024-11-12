@@ -9,20 +9,32 @@ spring:
           api-gateway-service:
             provider: api-gateway-service
             client-id: gateway-client
-            client-secret: FcHehLfJzfGtf4NkJsVGkHSKxNILvhTL
+            client-secret: Di7OSFgSuYCTjALxhp73vOttU0k33Mej
             authorization-grant-type: authorization_code
             redirect-uri: 'http://localhost:9090/login/oauth2/code/keycloak'
             scope: openid
   cloud:
     gateway:
       default-filters:
-      - TokenRelay
+        - TokenRelay
       routes:
-      - id: users-service
-        uri: http://localhost:8081
-        predicates:
-        - Path=/users/**
-#          filters:
-#            - StripPrefix=0
+        - id: users-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/users/**
+          filters:
+            - StripPrefix=0
+        - id: projects-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/projects/**
+          filters:
+            - StripPrefix=0
+        - id: payments-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/payments/**
+          filters:
+            - StripPrefix=0
 server:
   port: 9090

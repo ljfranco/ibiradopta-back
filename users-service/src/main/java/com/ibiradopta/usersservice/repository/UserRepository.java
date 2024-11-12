@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class UserRepository implements IUserRepository{
 
     private final Keycloak keycloakClient;
-    @Value("${elaparato.keycloak.realm}")
+    @Value("${ibiradopta.keycloak.realm}")
     private String realm;
 
 

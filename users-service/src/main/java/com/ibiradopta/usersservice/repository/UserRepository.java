@@ -88,13 +88,18 @@ public class UserRepository implements IUserRepository{
     }
 
     private User convertToUser(UserRepresentation userRepresentation) {
+        String address = null;
+
+        if (userRepresentation.getAttributes() != null && userRepresentation.getAttributes().get("address") != null) {
+            address = userRepresentation.getAttributes().get("address").get(0);
+        }
         return User.builder()
                 .id(userRepresentation.getId())
                 .userName(userRepresentation.getUsername())
                 .email(userRepresentation.getEmail())
                 .firstName(userRepresentation.getFirstName())
                 .lastName(userRepresentation.getLastName())
-                .address(userRepresentation.getAttributes().get("address").get(0))
+                .address(address)
                 .build();
     }
 }

@@ -10,7 +10,7 @@ spring:
     password: ${MYSQL_PASSWORD}
   jpa:
     hibernate:
-      dialect: org.hibernate.dialect.MySQL5Dialect
+      dialect: org.hibernate.dialect.MySQL8Dialect
     show-sql: true
   security:
     oauth2:

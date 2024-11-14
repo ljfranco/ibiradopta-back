@@ -17,3 +17,8 @@ spring:
       resource-server:
         jwt:
           issuer-uri: ${OAUTH2_ISSUER_URI}
+
+springdoc:
+  swagger-ui:
+    oauth:
+      clientId: ${SWAGGER_LOGIN_CLIENT_ID}

@@ -38,3 +38,23 @@ spring:
             - StripPrefix=0
 server:
   port: ${SERVER_PORT}
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    config-url: /v3/api-docs/swagger-config
+    oauth:
+      clientId: ${SWAGGER_LOGIN_CLIENT_ID}
+    urls:
+      -   name: gateway-service
+          url: /v3/api-docs
+#      Definition of the services that will be shown in the Swagger UI
+#      user-service Definition
+      -   name: users-service
+          url: /users/v3/api-docs
+#      project-service Definition
+      -   name: projects-service
+          url: /projects/v3/api-docs

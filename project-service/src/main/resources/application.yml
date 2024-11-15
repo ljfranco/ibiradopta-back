@@ -19,6 +19,9 @@ spring:
           issuer-uri: ${OAUTH2_ISSUER_URI}
 
 springdoc:
+  api-docs:
+    path: /projects/v3/api-docs
   swagger-ui:
+    path: /projects/swagger-ui.html
     oauth:
       clientId: ${SWAGGER_LOGIN_CLIENT_ID}

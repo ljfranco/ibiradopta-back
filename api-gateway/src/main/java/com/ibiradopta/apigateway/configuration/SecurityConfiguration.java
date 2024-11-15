@@ -18,6 +18,7 @@ public class SecurityConfiguration {
 //            .oauth2Login();// to redirect to oauth2 login page.
 
             .authorizeExchange()
+            .pathMatchers("/swagger-ui.html", "/webjars/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll()
             .anyExchange()
             .authenticated()
             .and()

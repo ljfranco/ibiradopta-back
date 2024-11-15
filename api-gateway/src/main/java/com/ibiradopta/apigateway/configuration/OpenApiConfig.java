@@ -12,7 +12,7 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI().info(new Info()
                 .title("Ibiradopta API Gateway Service")
-                .description("API Gateway Service")
+                .description("API Gateway Service, Select a Definition to view the API documentation ------>")
                 .version("1.0.0"));
     }
 }

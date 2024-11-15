@@ -36,6 +36,23 @@ spring:
             - Path=/payments/**
           filters:
             - StripPrefix=0
+#      global cors:
+#        corsConfigurations:
+#          '[/**]':
+#            allowedOrigins: "*"
+#            allowedMethods:
+#              - GET
+#              - POST
+#              - PUT
+#              - PATCH
+#              - DELETE
+#              - OPTIONS
+#            allowedHeaders:
+#              - "*"
+#            exposedHeaders:
+#              - "Authorization"
+#              - "Link"
+#              - "X-Total-Count"
 server:
   port: ${SERVER_PORT}
 

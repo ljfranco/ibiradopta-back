@@ -23,3 +23,4 @@ springdoc:
         path: /users/swagger-ui.html
         oauth:
             clientId: ${SWAGGER_LOGIN_CLIENT_ID}
+#        redirectUrl: http://localhost:9090/webjars/swagger-ui/index.html

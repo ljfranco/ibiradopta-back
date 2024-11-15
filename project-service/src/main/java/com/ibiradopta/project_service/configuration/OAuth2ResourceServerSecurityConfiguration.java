@@ -17,7 +17,7 @@ public class OAuth2ResourceServerSecurityConfiguration {
 
         http
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**", "/swagger-resources/**").permitAll()
+                        .requestMatchers("/projects/swagger-ui/**", "/projects/v3/api-docs/**", "/projects/swagger-ui.html", "/projects/swagger-ui/**", "/projects/swagger-ui.html", "/projects/webjars/**", "/projects/swagger-resources/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2

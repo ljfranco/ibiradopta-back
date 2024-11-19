@@ -1,14 +1,27 @@
-# Usar la imagen base de OpenJDK 17
-FROM openjdk:17-jdk-slim
+# Etapa de construcción
+FROM maven:3.9.5-eclipse-temurin-17 AS build
 
-# Copiar el archivo JAR de la aplicación (asegúrate de que el JAR ya esté construido)
-COPY target/users-service-0.0.1-SNAPSHOT.jar /usr/app/user-service.jar
+# Establecer el directorio de trabajo
+WORKDIR /usr/src/app
+
+# Copiar archivos necesarios para construir
+COPY pom.xml .
+COPY src ./src
+
+# Construir el proyecto y empaquetar el JAR
+RUN mvn clean package -DskipTests
+
+# Etapa de ejecución
+FROM openjdk:17-jdk-slim
 
 # Establecer el directorio de trabajo
 WORKDIR /usr/app
 
-# Exponer el puerto de la aplicación
-EXPOSE 8081
+# Copiar el JAR generado desde la etapa de construcción
+COPY --from=build /usr/src/app/target/users-service-0.0.1-SNAPSHOT.jar users-service.jar
 
-# Ejecutar la aplicación
-CMD ["java", "-jar", "user-service.jar"]
+# Exponer el puerto
+EXPOSE 8082
+
+# Comando para ejecutar la aplicación
+CMD ["java", "-jar", "users-service.jar"]

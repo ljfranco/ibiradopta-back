@@ -1,5 +1,5 @@
 # Etapa de construcción
-FROM maven:3.8.8-openjdk-17 AS build
+FROM maven:3.9.5-eclipse-temurin-17 AS build
 
 # Establecer el directorio de trabajo
 WORKDIR /usr/src/app
@@ -25,4 +25,5 @@ EXPOSE 9090
 
 # Comando para ejecutar la aplicación
 CMD ["java", "-jar", "gateway-service.jar"]
+
 

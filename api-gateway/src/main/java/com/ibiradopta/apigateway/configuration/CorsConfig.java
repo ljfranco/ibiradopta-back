@@ -10,17 +10,16 @@ import org.springframework.context.annotation.Bean;
 public class CorsConfig {
 
     @Bean
-    public UrlBasedCorsConfigurationSource corsConfigurationSource() {
-
+    public CorsWebFilter corsWebFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedOriginPattern("*"); // Allow all origins
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
 
-        return  source;
+        return new CorsWebFilter(source);
     }
 }

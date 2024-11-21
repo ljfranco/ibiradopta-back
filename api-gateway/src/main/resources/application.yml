@@ -17,6 +17,7 @@ spring:
     gateway:
       default-filters:
         - TokenRelay
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
       routes:
         - id: users-service
           uri: ${USERS_SERVICE_URI}
@@ -36,23 +37,6 @@ spring:
             - Path=/payments/**
           filters:
             - StripPrefix=0
-#      global cors:
-#        corsConfigurations:
-#          '[/**]':
-#            allowedOrigins: "*"
-#            allowedMethods:
-#              - GET
-#              - POST
-#              - PUT
-#              - PATCH
-#              - DELETE
-#              - OPTIONS
-#            allowedHeaders:
-#              - "*"
-#            exposedHeaders:
-#              - "Authorization"
-#              - "Link"
-#              - "X-Total-Count"
 server:
   port: ${SERVER_PORT}
 
@@ -71,7 +55,7 @@ springdoc:
 #      Definition of the services that will be shown in the Swagger UI
 #      user-service Definition
       -   name: users-service
-          url: /users/v3/api-docs
+          url: ${SWAGGER_USERS_SERVICE_URI}/users/v3/api-docs
 #      project-service Definition
       -   name: projects-service
-          url: /projects/v3/api-docs
+          url: ${SWAGGER_PROJECTS_SERVICE_URI}/projects/v3/api-docs

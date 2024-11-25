@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Data
 public class ProjectDto {
 
-    private Integer id;
+    private String id;
     private String name;
     private String description;
     private String imageUrl;

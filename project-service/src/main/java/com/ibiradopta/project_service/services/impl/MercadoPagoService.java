@@ -23,7 +23,7 @@ public class MercadoPagoService implements IMercadoPagoService {
         // Convertir los projectos recibidos a items de la preferencia
         for (ProjectDto project : projects) {
             PreferenceItemRequest itemRequest = PreferenceItemRequest.builder()
-                    .id(String.valueOf(project.getId()))
+                    .id(project.getId())
                     .title(project.getName())
                     .description(project.getDescription())
                     .pictureUrl(project.getImageUrl())

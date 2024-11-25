@@ -2,6 +2,7 @@ package com.ibiradopta.project_service.services.impl;
 
 import com.ibiradopta.project_service.models.dto.ProjectDto;
 import com.ibiradopta.project_service.services.IMercadoPagoService;
+import com.mercadopago.MercadoPagoConfig;
 import com.mercadopago.client.preference.PreferenceBackUrlsRequest;
 import com.mercadopago.client.preference.PreferenceClient;
 import com.mercadopago.client.preference.PreferenceItemRequest;
@@ -9,6 +10,7 @@ import com.mercadopago.client.preference.PreferenceRequest;
 import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
 import com.mercadopago.resources.preference.Preference;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,8 +18,15 @@ import java.util.List;
 
 @Service
 public class MercadoPagoService implements IMercadoPagoService {
+
+    @Value("${mercadopago.accessToken}")
+    private String accessToken;
+
     @Override
     public String createPreference(List<ProjectDto> projects) throws MPException, MPApiException {
+
+        // Configura el token de acceso para MercadoPago con la variable 'accesToken'.
+        MercadoPagoConfig.setAccessToken(accessToken);
 
         List<PreferenceItemRequest> items = new ArrayList<>();
 

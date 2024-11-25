@@ -23,7 +23,7 @@ public class MercadoPagoService implements IMercadoPagoService {
     private String accessToken;
 
     @Override
-    public String createPreference(List<ProjectDto> projects) throws MPException, MPApiException {
+    public Preference createPreference(List<ProjectDto> projects) throws MPException, MPApiException {
 
         // Configura el token de acceso para MercadoPago con la variable 'accesToken'.
         MercadoPagoConfig.setAccessToken(accessToken);
@@ -68,7 +68,7 @@ public class MercadoPagoService implements IMercadoPagoService {
 
         // Retornar el punto de inicio de la preferencia (URL de redirección para
         // iniciar el pago).
-        return preference.getInitPoint();
+        return preference;
     }
 }
 

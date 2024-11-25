@@ -8,5 +8,5 @@ import com.mercadopago.resources.preference.Preference;
 import java.util.List;
 
 public interface IMercadoPagoService {
-    public String createPreference(List<ProjectDto> projects) throws MPException, MPApiException;
+    public Preference createPreference(List<ProjectDto> projects) throws MPException, MPApiException;
 }

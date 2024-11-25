@@ -35,7 +35,6 @@ spring:
           uri: ${PAYMENTS_SERVICE_URI}
           predicates:
             - Path=/payments/**
-            - Path=/mercadopago/**
           filters:
             - StripPrefix=0
 server:

@@ -2,6 +2,7 @@ package com.ibiradopta.project_service.services.impl;
 
 import com.ibiradopta.project_service.models.dto.ProjectDto;
 import com.ibiradopta.project_service.services.IMercadoPagoService;
+import com.mercadopago.client.preference.PreferenceBackUrlsRequest;
 import com.mercadopago.client.preference.PreferenceClient;
 import com.mercadopago.client.preference.PreferenceItemRequest;
 import com.mercadopago.client.preference.PreferenceRequest;
@@ -16,7 +17,7 @@ import java.util.List;
 @Service
 public class MercadoPagoService implements IMercadoPagoService {
     @Override
-    public Preference createPreference(List<ProjectDto> projects) throws MPException, MPApiException {
+    public String createPreference(List<ProjectDto> projects) throws MPException, MPApiException {
 
         List<PreferenceItemRequest> items = new ArrayList<>();
 
@@ -35,14 +36,30 @@ public class MercadoPagoService implements IMercadoPagoService {
             items.add(itemRequest);
         }
 
+        // Crear un objeto 'PreferenceBackUrlsRequest' para definir las URLs de retorno.
+        PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
+                .success("https://pruebakeycloak.vercel.app/success") // URL a la que se redirige en caso de éxito.
+                .pending("https://pruebakeycloak.vercel.app/pending") // URL a la que se redirige en caso de que el pago esté pendiente.
+                .failure("https://pruebakeycloak.vercel.app/failure") // URL a la que se redirige en caso de fallo.
+                .build();
+
         // Crear la preferencia
         PreferenceRequest preferenceRequest = PreferenceRequest.builder()
                 .items(items)
+                .backUrls(backUrls)
+                .autoReturn("approved") // Configurar el retorno automático.
                 .build();
 
-        // Crear cliente para llamar al API de MercadoPago
+//        // Crear cliente para llamar al API de MercadoPago
         PreferenceClient client = new PreferenceClient();
-        return client.create(preferenceRequest);
+//        return client.create(preferenceRequest);
+
+        // Crear la preferencia de pago usando el cliente de preferencias.
+        Preference preference = client.create(preferenceRequest);
+
+        // Retornar el punto de inicio de la preferencia (URL de redirección para
+        // iniciar el pago).
+        return preference.getInitPoint();
     }
 }
 

@@ -19,7 +19,7 @@ import java.util.List;
 @Service
 public class MercadoPagoService implements IMercadoPagoService {
 
-    @Value("${mercadopago.accessToken}")
+    @Value("${mercadoPago.accessToken}")
     private String accessToken;
 
     @Override

@@ -7,7 +7,6 @@ import com.ibiradopta.project_service.services.impl.MercadoPagoService;
 import com.ibiradopta.project_service.services.impl.PaymentService;
 import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
-import com.mercadopago.resources.preference.Preference;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -43,9 +42,11 @@ public class PaymentController {
 
     // Endpoint para crear preferencia
     @PostMapping("/createpreference")
-    public Preference newPreference(@RequestBody List<ProjectDto> projects) throws MPException, MPApiException {
+    public ResponseEntity<String> newPreference(@RequestBody List<ProjectDto> projects) throws MPException, MPApiException {
 
         // Crear la preferencia con los productos recibidos
-        return mercadoPagoService.createPreference(projects);
+        String preferenceId =  mercadoPagoService.createPreference(projects);
+
+        return ResponseEntity.ok(preferenceId);
     }
 }

@@ -21,7 +21,7 @@ public class SecurityConfiguration {
                         .pathMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
                                 "/users/v3/api-docs/**", "/projects/v3/api-docs/**",
                                 "/projects/v3/api-docs/**",
-                                "/users/**","/users/update","/projects/**","/payments/**").permitAll() // Allow specific endpoints
+                                "/users/**","/users/update","/projects/**","/payments/**","/mercadopago/**").permitAll() // Allow specific endpoints
                         .anyExchange().authenticated())
                 .csrf((csrf) -> csrf.disable()) // Disable CSRF
                 .oauth2Login(withDefaults()); // Redirect to OAuth2 login page for other endpoints

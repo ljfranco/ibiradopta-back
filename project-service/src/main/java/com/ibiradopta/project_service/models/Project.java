@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -30,6 +31,8 @@ public class Project {
     private String location;
     @Column(name = "fecha_finalizacion")
     private LocalDate endDate;
+    @Column(name = "monto")
+    private Double amount;
     @Column(name = "finalizado")
     private Integer IsFinished;
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)

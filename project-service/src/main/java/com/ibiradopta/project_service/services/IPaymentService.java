@@ -10,4 +10,7 @@ public interface IPaymentService {
 
     List<PaymentDto> getPaymentsByFilters(Integer projectId, String UserId, String startDate, String endDate);
 
+    void savePayment(PaymentDto paymentDto);
+
+    void saveAllPayments(List<PaymentDto> paymentDtos);
 }

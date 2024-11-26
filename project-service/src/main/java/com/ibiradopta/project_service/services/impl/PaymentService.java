@@ -40,8 +40,38 @@ public class PaymentService implements IPaymentService {
                     //Obtener el usuario relacionado al pago
                     System.out.println("payment.getUserId()"+payment.getUserId());
                     UserDto user = userClient.getUserById(payment.getUserId());
-                    return new PaymentDto(payment.getId(),payment.getAmount(),payment.getDate(), user,payment.getProject());
+                    return new PaymentDto(payment.getId().toString(),payment.getAmount(),payment.getDate(), user,payment.getProject());
                 })
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void savePayment(PaymentDto paymentDto) {
+        Payment payment = new Payment();
+        payment.setId(Long.valueOf(paymentDto.getId()));
+        payment.setAmount(paymentDto.getAmount());
+        payment.setDate(paymentDto.getDate());
+        payment.setUserId(paymentDto.getUser().getId());
+        payment.setProject(paymentDto.getProject());
+        paymentRepository.save(payment);
+    }
+
+    @Override
+    public void saveAllPayments(List<PaymentDto> paymentDtos) {
+        List<Payment> payments = paymentDtos.stream()
+                .map(paymentDto -> {
+                    Payment payment = new Payment();
+                    payment.setId(Long.valueOf(paymentDto.getId()));
+                    payment.setAmount(paymentDto.getAmount());
+                    payment.setDate(paymentDto.getDate());
+                    payment.setUserId(paymentDto.getUser().getId());
+                    payment.setProject(paymentDto.getProject());
+                    return payment;
+                })
+                .collect(Collectors.toList());
+        paymentRepository.saveAll(payments);
+
+    }
+
+
 }

@@ -18,6 +18,7 @@ public class SecurityConfiguration {
         http
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow all OPTIONS requests
+                        .pathMatchers("/payments/notify/**").permitAll()  // Permitir acceso no autenticado solo a este endpoint
                         .pathMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
                                 "/users/v3/api-docs/**", "/projects/v3/api-docs/**",
                                 "/projects/v3/api-docs/**",

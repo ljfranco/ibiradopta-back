@@ -53,7 +53,7 @@ public class MercadoPagoService implements IMercadoPagoService {
 
         // Crear un objeto 'PreferenceBackUrlsRequest' para definir las URLs de retorno.
         PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-                .success("https://pruebakeycloak.vercel.app/success") // URL a la que se redirige en caso de éxito.
+                .success("http://localhost:3000/SuccessPayment") // URL a la que se redirige en caso de éxito.
                 .pending("https://pruebakeycloak.vercel.app/pending") // URL a la que se redirige en caso de que el pago esté pendiente.
                 .failure("https://pruebakeycloak.vercel.app/failure") // URL a la que se redirige en caso de fallo.
                 .build();

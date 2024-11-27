@@ -24,7 +24,7 @@ public class OAuth2ResourceServerSecurityConfiguration {
                                 , "/projects/swagger-ui.html"
                                 , "/projects/webjars/**"
                                 , "/projects/swagger-resources/**"
-                                ,"/payments/notify/**").permitAll()
+                                ,"/mercadopago/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2

@@ -16,7 +16,7 @@ spring:
   cloud:
     gateway:
       default-filters:
-        - TokenRelay
+#        - TokenRelay
         - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
       routes:
         - id: users-service
@@ -25,18 +25,28 @@ spring:
             - Path=/users/**
           filters:
             - StripPrefix=0
+            - TokenRelay
         - id: projects-service
           uri: ${PROJECTS_SERVICE_URI}
           predicates:
             - Path=/projects/**
           filters:
             - StripPrefix=0
+            - TokenRelay
         - id: payments-service
           uri: ${PAYMENTS_SERVICE_URI}
           predicates:
             - Path=/payments/**
           filters:
             - StripPrefix=0
+            - TokenRelay
+        - id: mercadoPago-service
+          uri: ${PAYMENTS_SERVICE_URI}
+          predicates:
+            - Path=/mercadopago/**
+          filters:
+            - StripPrefix=0
+
 server:
   port: ${SERVER_PORT}
 

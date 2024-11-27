@@ -6,10 +6,7 @@ import com.ibiradopta.project_service.services.impl.MercadoPagoService;
 import com.ibiradopta.project_service.services.impl.PaymentService;
 import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
-import com.mercadopago.net.HttpStatus;
 import io.swagger.v3.oas.annotations.Operation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,6 +22,7 @@ public class PaymentController {
 
     @Operation(summary = "Get all payments", description = "Obtain all existing payments, the respone is a list of payments")
     @GetMapping("/getall")
+    @PreAuthorize("hasRole('ROLE_Administrador')")
     public ResponseEntity<List<Payment>> getAllPayments() {
         return ResponseEntity.ok(paymentService.getAllPayments());
     }
@@ -53,6 +51,4 @@ public class PaymentController {
 
         //return ResponseEntity.ok(preferenceId);
     }
-
-
 }

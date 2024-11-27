@@ -35,6 +35,7 @@ public class MercadoPagoController {
             String paymentId = mpNotify.getData().getId();  // Aquí obtenemos el ID del pago
 
             List<PaymentMPDto> payments = mercadoPagoService.getPayment(Long.parseLong(paymentId));  // Consultar el estado del pago desde la API de MercadoPago
+            logger.info("Estado del pago: {}", payments.toString());
 
             // Guardar la información en la base de datos según el estado
             mercadoPagoService.savePayment(payments);

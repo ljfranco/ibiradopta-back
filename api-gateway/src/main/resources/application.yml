@@ -40,7 +40,7 @@ spring:
           filters:
             - StripPrefix=0
             - TokenRelay
-        - id: mercadoPago-service
+        - id: mercadopago-service
           uri: ${PAYMENTS_SERVICE_URI}
           predicates:
             - Path=/mercadopago/**

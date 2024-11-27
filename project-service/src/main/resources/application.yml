@@ -29,3 +29,5 @@ springdoc:
 
 mercadoPago:
   accessToken: ${MERCADO_PAGO_ACCESS_TOKEN}
+  successUrl: ${PAYMENT_SUCCESS_URL}
+  failureUrl: ${PAYMENT_FAILURE_URL}

@@ -1,9 +1,7 @@
 package com.ibiradopta.project_service.services.impl;
 
 
-import com.ibiradopta.project_service.models.dto.MetadataMPDto;
-import com.ibiradopta.project_service.models.dto.PaymentMPDto;
-import com.ibiradopta.project_service.models.dto.ProjectDto;
+import com.ibiradopta.project_service.models.dto.*;
 import com.ibiradopta.project_service.services.IMercadoPagoService;
 import com.mercadopago.MercadoPagoConfig;
 import com.mercadopago.client.payment.PaymentClient;
@@ -15,18 +13,30 @@ import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
 import com.mercadopago.resources.preference.Preference;
 import com.mercadopago.resources.payment.Payment;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class MercadoPagoService implements IMercadoPagoService {
 
     @Value("${mercadoPago.accessToken}")
     private String accessToken;
+
+    @Value("${mercadoPago.successUrl}")
+    private String successUrl;
+
+    @Value("${mercadoPago.failureUrl}")
+    private String failureUrl;
+
+    @Autowired
+    private PaymentService paymentService;
 
     @Override
     public String createPreference(String userId, List<ProjectDto> projects) throws MPException, MPApiException {
@@ -53,9 +63,9 @@ public class MercadoPagoService implements IMercadoPagoService {
 
         // Crear un objeto 'PreferenceBackUrlsRequest' para definir las URLs de retorno.
         PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-                .success("http://localhost:3000/SuccessPayment") // URL a la que se redirige en caso de éxito.
-                .pending("https://pruebakeycloak.vercel.app/pending") // URL a la que se redirige en caso de que el pago esté pendiente.
-                .failure("https://pruebakeycloak.vercel.app/failure") // URL a la que se redirige en caso de fallo.
+                .success(successUrl) // URL a la que se redirige en caso de éxito.
+                .pending(failureUrl) // URL a la que se redirige en caso de que el pago esté pendiente.
+                .failure(failureUrl) // URL a la que se redirige en caso de fallo.
                 .build();
 
         //Crear un objeto 'MetadataMPDto' para agregar metadatos a la preferencia.
@@ -101,32 +111,50 @@ public class MercadoPagoService implements IMercadoPagoService {
         Payment paymentFromMP = paymentClient.get(paymentId);
 
 
-        // Crear una lista de objetos PaymentMPDto por cada id de proyecto en los metadatos para luego guardarlos en la base de datos con el estado obtenido
+        System.out.println(paymentFromMP.getMetadata());
 
-        List<PaymentMPDto> dbPayments = new ArrayList<>();
+        // Obtener los metadatos del pago
+        Map<String, Object> metadata = paymentFromMP.getMetadata();
+
+        // Obtener la lista de projectIds de los metadatos (asumiendo que es una lista de cadenas)
         List<String> projectIds = new ArrayList<>();
-        Object projectIdsObject = paymentFromMP.getMetadata().get("projectIds"); // Obtener el valor del mapa
-        if (projectIdsObject instanceof List<?> list) {
-            for (Object item : list) {
-                if (item instanceof String) {
-                    projectIds.add((String) item);  // Agregar solo si el elemento es una cadena
+
+        // Comprobar si 'project_ids' está presente en los metadatos y es una lista
+        if (metadata.containsKey("project_ids")) {
+            Object projectIdsObject = metadata.get("project_ids");
+
+            if (projectIdsObject instanceof List<?>) {
+                // Cast al tipo correcto: List<String>
+                List<?> list = (List<?>) projectIdsObject;
+
+                // Iterar sobre la lista y agregar los valores como Strings
+                for (Object item : list) {
+                    if (item instanceof String) {
+                        projectIds.add((String) item);
+                    } else {
+                        System.out.println("El item no es una cadena válida: " + item);
+                    }
                 }
+            } else {
+                System.out.println("El valor de 'project_ids' no es una lista válida.");
             }
         } else {
-            // Manejar el caso donde 'projectIds' no es una lista
-            System.out.println("El valor de projectIds no es una lista válida.");
+            System.out.println("No se encontró 'project_ids' en los metadatos.");
         }
+
+
+        // Ahora creamos el listado de PaymentMPDto
+        List<PaymentMPDto> dbPayments = new ArrayList<>();
         for (String projectId : projectIds) {
             PaymentMPDto dbPayment = new PaymentMPDto();
             dbPayment.setProjectId(projectId);
             dbPayment.setId(paymentFromMP.getId());
-            dbPayment.setUserId(paymentFromMP.getMetadata().get("userId").toString());
-            //convertir bigdecimal a double
+            dbPayment.setUserId(paymentFromMP.getMetadata().get("user_id").toString());
+            // Convertir BigDecimal a double
             dbPayment.setAmount(paymentFromMP.getTransactionAmount().doubleValue());
             dbPayment.setDate(paymentFromMP.getDateApproved().toLocalDate());
             dbPayments.add(dbPayment);
         }
-
 
         return dbPayments;
     }
@@ -134,12 +162,36 @@ public class MercadoPagoService implements IMercadoPagoService {
     //Guardar el pago en la base de datos
     @Override
     public void savePayment(List<PaymentMPDto> payments) {
-        // Guardar los pagos en la base de datos
+        // Convertir los PaymentMPDto a PaymentDto
+        List<PaymentDto> paymentDtos = payments.stream()
+                .map(this::convertToPaymentDto)
+                .collect(Collectors.toList());
 
-
-        //paymentRepository.saveAll(payments);
+        // Llamar al metodo de PaymentService para guardar los pagos
+        paymentService.saveAllPayments(paymentDtos);
 
     }
 
+    // Metodo para convertir PaymentMPDto a PaymentDto
+    private PaymentDto convertToPaymentDto(PaymentMPDto paymentMPDto) {
+        PaymentDto paymentDto = new PaymentDto();
+
+        paymentDto.setId(String.valueOf(paymentMPDto.getId()));
+        paymentDto.setAmount(paymentMPDto.getAmount());
+        paymentDto.setDate(paymentMPDto.getDate());
+
+        // Convertir userId a un UserDto
+        UserDto userDto = new UserDto();  // Aquí debes obtener el UserDto correspondiente al userId
+        userDto.setId(paymentMPDto.getUserId());
+        paymentDto.setUser(userDto);
+
+        // Convertir projectId a un ProjectDto
+        ProjectDto projectDto = new ProjectDto();
+        projectDto.setId(paymentMPDto.getProjectId()); // Asignar el ID del proyecto
+        paymentDto.setProject(projectDto);
+
+        return paymentDto;
+
+    }
 }
 

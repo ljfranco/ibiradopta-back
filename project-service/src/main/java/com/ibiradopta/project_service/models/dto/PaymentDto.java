@@ -1,6 +1,5 @@
 package com.ibiradopta.project_service.models.dto;
 
-import com.ibiradopta.project_service.models.Project;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,5 +17,5 @@ public class PaymentDto {
     // User Data
     private UserDto user;
     //Project Data
-    private Project project;
+    private ProjectDto project;
 }

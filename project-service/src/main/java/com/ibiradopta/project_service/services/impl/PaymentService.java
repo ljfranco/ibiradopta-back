@@ -3,7 +3,9 @@ package com.ibiradopta.project_service.services.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ibiradopta.project_service.feignClient.UserClient;
 import com.ibiradopta.project_service.models.Payment;
+import com.ibiradopta.project_service.models.Project;
 import com.ibiradopta.project_service.models.dto.PaymentDto;
+import com.ibiradopta.project_service.models.dto.ProjectDto;
 import com.ibiradopta.project_service.models.dto.UserDto;
 import com.ibiradopta.project_service.repositories.IPaymentRepository;
 import com.ibiradopta.project_service.services.IPaymentService;
@@ -40,7 +42,7 @@ public class PaymentService implements IPaymentService {
                     //Obtener el usuario relacionado al pago
                     System.out.println("payment.getUserId()"+payment.getUserId());
                     UserDto user = userClient.getUserById(payment.getUserId());
-                    return new PaymentDto(payment.getId().toString(),payment.getAmount(),payment.getDate(), user,payment.getProject());
+                    return new PaymentDto(payment.getId().toString(),payment.getAmount(),payment.getDate(), user,mapper.convertValue(payment.getProject(), ProjectDto.class));
                 })
                 .collect(Collectors.toList());
     }
@@ -52,7 +54,7 @@ public class PaymentService implements IPaymentService {
         payment.setAmount(paymentDto.getAmount());
         payment.setDate(paymentDto.getDate());
         payment.setUserId(paymentDto.getUser().getId());
-        payment.setProject(paymentDto.getProject());
+        payment.setProject(mapper.convertValue(paymentDto.getProject(), Project.class));
         paymentRepository.save(payment);
     }
 
@@ -65,7 +67,7 @@ public class PaymentService implements IPaymentService {
                     payment.setAmount(paymentDto.getAmount());
                     payment.setDate(paymentDto.getDate());
                     payment.setUserId(paymentDto.getUser().getId());
-                    payment.setProject(paymentDto.getProject());
+                    payment.setProject(mapper.convertValue(paymentDto.getProject(), Project.class));
                     return payment;
                 })
                 .collect(Collectors.toList());

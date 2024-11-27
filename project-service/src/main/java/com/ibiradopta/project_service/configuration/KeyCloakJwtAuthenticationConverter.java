@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -18,20 +19,20 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Component
 public class KeyCloakJwtAuthenticationConverter implements Converter<Jwt, AbstractAuthenticationToken> {
     private final JwtGrantedAuthoritiesConverter defaultGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
 
     private static Collection<? extends GrantedAuthority> extractResourceRoles(final Jwt jwt) throws JsonProcessingException {
-        Set<GrantedAuthority> resourcesRoles = new HashSet();
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-        resourcesRoles.addAll(extractRolesRealmAccess("realm_access", objectMapper.readTree(objectMapper.writeValueAsString(jwt)).get("claims")));
+        Set<GrantedAuthority> resourcesRoles = new HashSet<>(extractRolesRealmAccess("realm_access", objectMapper.readTree(objectMapper.writeValueAsString(jwt)).get("claims")));
         return resourcesRoles;
     }
 
 
     private static List<GrantedAuthority> extractRolesRealmAccess(String route, JsonNode jwt) {
-        Set<String> rolesWithPrefix = new HashSet();
+        Set<String> rolesWithPrefix = new HashSet<>();
         jwt.path(route).path("roles").elements().forEachRemaining((r) -> {
             rolesWithPrefix.add("ROLE_" + r.asText());
         });
@@ -56,7 +57,7 @@ public class KeyCloakJwtAuthenticationConverter implements Converter<Jwt, Abstra
         return new JwtAuthenticationToken(source, authorities);
     }
 
-    public Collection<GrantedAuthority> getGrantedAuthorities(Jwt source) throws JsonProcessingException {
-        return (Collection) Stream.concat(this.defaultGrantedAuthoritiesConverter.convert(source).stream(), extractResourceRoles(source).stream()).collect(Collectors.toSet());
+    public Collection getGrantedAuthorities(Jwt source) throws JsonProcessingException {
+        return Stream.concat(this.defaultGrantedAuthoritiesConverter.convert(source).stream(), extractResourceRoles(source).stream()).collect(Collectors.toSet());
     }
 }

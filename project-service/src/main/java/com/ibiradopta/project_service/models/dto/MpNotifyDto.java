@@ -9,11 +9,11 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 public class MpNotifyDto {
         private Long id;
-        private Boolean liveMode;
+        private Boolean live_mode;
         private String type;
-        private OffsetDateTime dateCreated;
-        private Long userID;
-        private String apiVersion;
+        private OffsetDateTime date_created;
+        private Long user_id;
+        private String api_version;
         private String action;
         private DataMpDto data;
 }

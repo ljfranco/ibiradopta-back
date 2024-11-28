@@ -17,6 +17,8 @@ public class Payment {
     @Id
     @Column(name = "id")
     private Long id;
+    @Column(name = "cantidad")
+    private Integer quantity;
     @Column(name = "monto")
     private Double amount;
     @Column(name = "fecha")

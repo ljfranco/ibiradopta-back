@@ -42,7 +42,7 @@ public class PaymentService implements IPaymentService {
                     //Obtener el usuario relacionado al pago
                     System.out.println("payment.getUserId()"+payment.getUserId());
                     UserDto user = userClient.getUserById(payment.getUserId());
-                    return new PaymentDto(payment.getId().toString(),payment.getAmount(),payment.getDate(), user,mapper.convertValue(payment.getProject(), ProjectDto.class));
+                    return new PaymentDto(payment.getId().toString(),payment.getQuantity(),payment.getAmount(),payment.getDate(), user,mapper.convertValue(payment.getProject(), ProjectDto.class));
                 })
                 .collect(Collectors.toList());
     }

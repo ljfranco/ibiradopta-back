@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +57,7 @@ public class MercadoPagoService implements IMercadoPagoService {
                     .categoryId(project.getLocation())
                     .quantity(project.getQuantity())
                     .currencyId("UYU") // Cambia la moneda según tu necesidad
-                    .unitPrice(project.getUnitPrice())
+                    .unitPrice(project.getPrice())
                     .build();
             items.add(itemRequest);
         }
@@ -111,50 +112,21 @@ public class MercadoPagoService implements IMercadoPagoService {
         Payment paymentFromMP = paymentClient.get(paymentId);
 
 
-        System.out.println(paymentFromMP.getMetadata());
-
-        // Obtener los metadatos del pago
-        Map<String, Object> metadata = paymentFromMP.getMetadata();
-
-        // Obtener la lista de projectIds de los metadatos (asumiendo que es una lista de cadenas)
-        List<String> projectIds = new ArrayList<>();
-
-        // Comprobar si 'project_ids' está presente en los metadatos y es una lista
-        if (metadata.containsKey("project_ids")) {
-            Object projectIdsObject = metadata.get("project_ids");
-
-            if (projectIdsObject instanceof List<?>) {
-                // Cast al tipo correcto: List<String>
-                List<?> list = (List<?>) projectIdsObject;
-
-                // Iterar sobre la lista y agregar los valores como Strings
-                for (Object item : list) {
-                    if (item instanceof String) {
-                        projectIds.add((String) item);
-                    } else {
-                        System.out.println("El item no es una cadena válida: " + item);
-                    }
-                }
-            } else {
-                System.out.println("El valor de 'project_ids' no es una lista válida.");
-            }
-        } else {
-            System.out.println("No se encontró 'project_ids' en los metadatos.");
-        }
-
-
-        // Ahora creamos el listado de PaymentMPDto
-        List<PaymentMPDto> dbPayments = new ArrayList<>();
-        for (String projectId : projectIds) {
-            PaymentMPDto dbPayment = new PaymentMPDto();
-            dbPayment.setProjectId(projectId);
-            dbPayment.setId(paymentFromMP.getId());
-            dbPayment.setUserId(paymentFromMP.getMetadata().get("user_id").toString());
-            // Convertir BigDecimal a double
-            dbPayment.setAmount(paymentFromMP.getTransactionAmount().doubleValue());
-            dbPayment.setDate(paymentFromMP.getDateApproved().toLocalDate());
-            dbPayments.add(dbPayment);
-        }
+        // Crear la lista de PaymentMPDto a partir de los items
+        List<PaymentMPDto> dbPayments = paymentFromMP.getAdditionalInfo()
+                .getItems()
+                .stream()
+                .map(item -> {
+                    PaymentMPDto dbPayment = new PaymentMPDto();
+                    dbPayment.setProjectId(item.getId()); // Aquí asumo que el ID del proyecto está en el campo `id` del item
+                    dbPayment.setId(paymentFromMP.getId());
+                    dbPayment.setQuantity(item.getQuantity());
+                    dbPayment.setUserId(paymentFromMP.getMetadata().get("user_id").toString());
+                    dbPayment.setAmount(item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())).doubleValue());
+                    dbPayment.setDate(paymentFromMP.getDateApproved().toLocalDate());
+                    return dbPayment;
+                })
+                .collect(Collectors.toList());
 
         return dbPayments;
     }
@@ -177,6 +149,7 @@ public class MercadoPagoService implements IMercadoPagoService {
         PaymentDto paymentDto = new PaymentDto();
 
         paymentDto.setId(String.valueOf(paymentMPDto.getId()));
+        paymentDto.setQuantity(paymentMPDto.getQuantity());
         paymentDto.setAmount(paymentMPDto.getAmount());
         paymentDto.setDate(paymentMPDto.getDate());
 

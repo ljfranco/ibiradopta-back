@@ -32,6 +32,8 @@ public class Project {
     private LocalDate endDate;
     @Column(name = "finalizado")
     private Integer IsFinished;
+    @Column(name = "precio")
+    private Double price;
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Payment> payments;

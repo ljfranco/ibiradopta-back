@@ -12,6 +12,7 @@ import java.time.LocalDate;
 public class PaymentDto {
     // Payment Data
     private String id;
+    private Integer quantity;
     private Double amount;
     private LocalDate date;
     // User Data

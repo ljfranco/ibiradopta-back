@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @Data
 public class PaymentMPDto {
     private Long id;
+    private Integer quantity;
     private Double amount;
     private LocalDate date;
     private String userId;

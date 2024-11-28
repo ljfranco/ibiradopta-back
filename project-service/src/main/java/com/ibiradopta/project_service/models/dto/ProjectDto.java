@@ -17,7 +17,7 @@ public class ProjectDto {
     private String imageUrl;
     private String location;
     private Integer quantity;
-    private BigDecimal unitPrice;
+    private BigDecimal price;
 
 
 

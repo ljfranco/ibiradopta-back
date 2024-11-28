@@ -51,6 +51,7 @@ public class PaymentService implements IPaymentService {
     public void savePayment(PaymentDto paymentDto) {
         Payment payment = new Payment();
         payment.setId(Long.valueOf(paymentDto.getId()));
+        payment.setQuantity(paymentDto.getQuantity());
         payment.setAmount(paymentDto.getAmount());
         payment.setDate(paymentDto.getDate());
         payment.setUserId(paymentDto.getUser().getId());
@@ -64,6 +65,7 @@ public class PaymentService implements IPaymentService {
                 .map(paymentDto -> {
                     Payment payment = new Payment();
                     payment.setId(Long.valueOf(paymentDto.getId()));
+                    payment.setQuantity(paymentDto.getQuantity());
                     payment.setAmount(paymentDto.getAmount());
                     payment.setDate(paymentDto.getDate());
                     payment.setUserId(paymentDto.getUser().getId());

@@ -124,9 +124,11 @@ public class MercadoPagoService implements IMercadoPagoService {
                     dbPayment.setUserId(paymentFromMP.getMetadata().get("user_id").toString());
                     dbPayment.setAmount(item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())).doubleValue());
                     dbPayment.setDate(paymentFromMP.getDateApproved().toLocalDate());
+                    System.out.println("dbPayment: "+dbPayment);
                     return dbPayment;
                 })
                 .collect(Collectors.toList());
+
 
         return dbPayments;
     }
@@ -139,6 +141,7 @@ public class MercadoPagoService implements IMercadoPagoService {
                 .map(this::convertToPaymentDto)
                 .collect(Collectors.toList());
 
+        System.out.println("paymentDtos: "+paymentDtos);
         // Llamar al metodo de PaymentService para guardar los pagos
         paymentService.saveAllPayments(paymentDtos);
 

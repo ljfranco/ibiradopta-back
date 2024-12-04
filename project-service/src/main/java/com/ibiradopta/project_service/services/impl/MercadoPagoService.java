@@ -1,14 +1,12 @@
 package com.ibiradopta.project_service.services.impl;
 
 
+import com.ibiradopta.project_service.feignClient.UserClient;
 import com.ibiradopta.project_service.models.dto.*;
 import com.ibiradopta.project_service.services.IMercadoPagoService;
 import com.mercadopago.MercadoPagoConfig;
 import com.mercadopago.client.payment.PaymentClient;
-import com.mercadopago.client.preference.PreferenceBackUrlsRequest;
-import com.mercadopago.client.preference.PreferenceClient;
-import com.mercadopago.client.preference.PreferenceItemRequest;
-import com.mercadopago.client.preference.PreferenceRequest;
+import com.mercadopago.client.preference.*;
 import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
 import com.mercadopago.resources.preference.Preference;
@@ -21,7 +19,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,6 +35,9 @@ public class MercadoPagoService implements IMercadoPagoService {
 
     @Autowired
     private PaymentService paymentService;
+
+    @Autowired
+    private UserClient userClient;
 
     @Override
     public String createPreference(String userId, List<ProjectDto> projects) throws MPException, MPApiException {
@@ -69,6 +69,14 @@ public class MercadoPagoService implements IMercadoPagoService {
                 .failure(failureUrl) // URL a la que se redirige en caso de fallo.
                 .build();
 
+        //Crear un objeto 'PrefeencePayerRequest' para agregar datos del usuario
+        UserDto user = userClient.getUserById(userId);
+        System.out.println("user: "+user.getEmail());
+        PreferencePayerRequest payer = PreferencePayerRequest.builder()
+                .email(user.getEmail())
+                .name(user.getUserName())
+                .build();
+
         //Crear un objeto 'MetadataMPDto' para agregar metadatos a la preferencia.
         MetadataMPDto metadata = new MetadataMPDto();
         //creo lista con ids de proyectos
@@ -78,11 +86,14 @@ public class MercadoPagoService implements IMercadoPagoService {
         }
         metadata.setProjectIds(projectIds);
         metadata.setUserId(userId);
+        metadata.setUserName(user.getUserName());
+        metadata.setUserEmail(user.getEmail());
 
 
         // Crear la preferencia de Pago
         PreferenceRequest preferenceRequest = PreferenceRequest.builder()
                 .items(items)
+                .payer(payer)
                 .backUrls(backUrls)
                 //.autoReturn("approved") // Configurar el retorno automático.
                 .metadata(metadata.toMap()) // Agregar los metadatos a la preferencia.
@@ -119,9 +130,12 @@ public class MercadoPagoService implements IMercadoPagoService {
                 .map(item -> {
                     PaymentMPDto dbPayment = new PaymentMPDto();
                     dbPayment.setProjectId(item.getId()); // Aquí asumo que el ID del proyecto está en el campo `id` del item
+                    dbPayment.setProjectName(item.getTitle());
                     dbPayment.setId(paymentFromMP.getId());
                     dbPayment.setQuantity(item.getQuantity());
                     dbPayment.setUserId(paymentFromMP.getMetadata().get("user_id").toString());
+                    dbPayment.setUserName((String) paymentFromMP.getMetadata().get("user_name"));
+                    dbPayment.setUserEmail(paymentFromMP.getMetadata().get("user_email").toString());
                     dbPayment.setAmount(item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())).doubleValue());
                     dbPayment.setDate(paymentFromMP.getDateApproved().toLocalDate());
                     System.out.println("dbPayment: "+dbPayment);
@@ -159,12 +173,16 @@ public class MercadoPagoService implements IMercadoPagoService {
         // Convertir userId a un UserDto
         UserDto userDto = new UserDto();  // Aquí debes obtener el UserDto correspondiente al userId
         userDto.setId(paymentMPDto.getUserId());
+        userDto.setUserName(paymentMPDto.getUserName());
+        userDto.setEmail(paymentMPDto.getUserEmail());
         paymentDto.setUser(userDto);
 
         // Convertir projectId a un ProjectDto
         ProjectDto projectDto = new ProjectDto();
         projectDto.setId(paymentMPDto.getProjectId()); // Asignar el ID del proyecto
+        projectDto.setName(paymentMPDto.getProjectName()); // Asignar el nombre del proyecto
         paymentDto.setProject(projectDto);
+
 
         return paymentDto;
 

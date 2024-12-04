@@ -14,5 +14,8 @@ public class PaymentMPDto {
     private Double amount;
     private LocalDate date;
     private String userId;
+    private String userEmail;
+    private String userName;
     private String projectId;
+    private String projectName;
 }

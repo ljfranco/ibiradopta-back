@@ -76,6 +76,10 @@ public class PaymentService implements IPaymentService {
                     return payment;
                 })
                 .collect(Collectors.toList());
+
+        System.out.println("payments: "+payments);
+
+        // Guardar los pagos en la base de datos
         paymentRepository.saveAll(payments);
 
         // Enviar un correo electrónico al usuario con la confirmación del pago

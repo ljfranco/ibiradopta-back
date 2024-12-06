@@ -41,12 +41,12 @@ public class EmailService implements IEmailService {
             context.setVariable("quantity", emailDetails.getQuantity());
             context.setVariable("amount", emailDetails.getAmount());
 
-            logger.info("Email details: {}", emailDetails.toString());
+            //logger.info("Email details: {}", emailDetails.toString());
 
             // Procesar la plantilla con el contexto
             String body = templateEngine.process("donation_confirmation_email", context);
 
-            logger.info("Email body: {}", body);
+            //logger.info("Email body: {}", body);
 
             // Crear el mensaje de correo con contenido HTML
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();

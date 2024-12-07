@@ -17,6 +17,23 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
+    // Maneja la excepción ProjectAlreadyExistsException
+    @ExceptionHandler(ProjectAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<ErrorResponse> handleProjectAlreadyExistsException(ProjectAlreadyExistsException ex, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
+    // Maneja la excepción ProjectBlockedException
+    @ExceptionHandler(ProjectBlockedException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<ErrorResponse> handleProjectBlockedException(ProjectBlockedException ex, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
+
 //    // Maneja otras excepciones generales
 //    @ExceptionHandler(Exception.class)
 //    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

@@ -37,4 +37,6 @@ public class Project {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Payment> payments;
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private List<Image> images;
 }

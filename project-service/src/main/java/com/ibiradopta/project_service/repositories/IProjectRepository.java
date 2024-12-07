@@ -18,4 +18,6 @@ public interface IProjectRepository extends JpaRepository<Project, Integer> {
             "AND (:startDate IS NULL OR fecha_finalizacion >= :startDate) " +
             "AND (:endDate IS NULL OR fecha_finalizacion <= :endDate)", nativeQuery = true)
     List<Project> findByFilters(String name, String location, String startDate, String endDate);
+
+    boolean existsByName(String name);
 }

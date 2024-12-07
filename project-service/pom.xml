@@ -89,18 +89,27 @@
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>2.6.0</version>
 		</dependency>
+<!--		Para el manejo de pagos con MercadoPago-->
 		<dependency>
 			<groupId>com.mercadopago</groupId>
 			<artifactId>sdk-java</artifactId>
 			<version>2.1.29</version>
 		</dependency>
+<!--		Para el manejo de emails-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
+<!--		para el manejo de plantillas usado para plantilla de email-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+<!--		Para el manejo de archivos alternativa a Amazon S3-->
+		<dependency>
+			<groupId>io.minio</groupId>
+			<artifactId>minio</artifactId>
+			<version>8.5.14</version>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>

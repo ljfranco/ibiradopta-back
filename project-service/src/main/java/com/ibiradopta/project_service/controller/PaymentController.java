@@ -30,6 +30,7 @@ public class PaymentController {
     @Operation(summary = "Get payments by filters", description = "Obtain existing payments by filters, the respone is a list of payments")
     @GetMapping("/filters")
     @PreAuthorize("hasRole('ROLE_Administrador')")
+
     public ResponseEntity<List<PaymentDto>> getPaymentsByFilters(
             @RequestParam(required = false) Integer projectId,
             @RequestParam(required = false) String userId,

@@ -13,4 +13,6 @@ public interface IPaymentService {
     void savePayment(PaymentDto paymentDto);
 
     void saveAllPayments(List<PaymentDto> paymentDtos);
+
+    List<PaymentDto> getPaymentsByUserId(String userId);
 }

@@ -97,5 +97,16 @@ public class PaymentService implements IPaymentService {
         emailService.sendEmail(emailDetails);
     }
 
+    @Override
+    public List<PaymentDto> getPaymentsByUserId(String userId) {
+        return paymentRepository.findByUserId(userId).stream()
+                .map(payment -> {
+                    //Obtener el usuario relacionado al pago
+                    UserDto user = userClient.getUserById(payment.getUserId());
+                    return new PaymentDto(payment.getId().toString(),payment.getQuantity(),payment.getAmount(),payment.getDate(), user,mapper.convertValue(payment.getProject(), ProjectDto.class));
+                })
+                .collect(Collectors.toList());
+    }
+
 
 }

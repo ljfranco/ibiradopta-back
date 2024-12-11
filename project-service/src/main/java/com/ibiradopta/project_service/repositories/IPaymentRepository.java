@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Repository
@@ -17,4 +18,5 @@ public interface IPaymentRepository extends JpaRepository<Payment, Integer> {
             "(:endDate IS NULL OR fecha <= :endDate)", nativeQuery = true)
     List<Payment> findByFilters(Integer projectId, String userId, String startDate, String endDate);
 
+    List<Payment> findByUserId(String userId);
 }

@@ -27,6 +27,14 @@ public class PaymentController {
         return ResponseEntity.ok(paymentService.getAllPayments());
     }
 
+    @Operation(summary = "Get a payment by userId", description = "Obtain an existing payment, the respone is the payment")
+    @GetMapping("/userId/{userId}")
+    //Autorizar solamente si es el mismo usuario quien consulta o un administrador
+    @PreAuthorize("#userId == authentication.name or hasRole('ROLE_Administrador')")
+    public ResponseEntity<List<PaymentDto>> getPaymentByUserId(@PathVariable String userId) {
+        return ResponseEntity.ok(paymentService.getPaymentsByUserId(userId));
+    }
+
     @Operation(summary = "Get payments by filters", description = "Obtain existing payments by filters, the respone is a list of payments")
     @GetMapping("/filters")
     @PreAuthorize("hasRole('ROLE_Administrador')")
